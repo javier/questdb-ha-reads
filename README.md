@@ -19,8 +19,8 @@ docker run --name replica1 -d --rm -e QDB_CAIRO_WAL_TEMP_PENDING_RENAME_TABLE_PR
 docker run --name replica2 -d --rm -e QDB_CAIRO_WAL_TEMP_PENDING_RENAME_TABLE_PREFIX=temp_replica2  -p 9002:9000  -p 8814:8812 questdb/questdb
 ```
 
-So I have three instances running, each listening on different HTTP port (9000, 9001, and 9002) and postgresql port (8812, 8813, 8814).
-I passed and environment variable to set a different temporary path on each instance; this way, I can easily identify which instance
+So you have now three instances running, each listening on different HTTP port (9000, 9001, and 9002) and postgresql port (8812, 8813, 8814).
+I passed an environment variable to set a different temporary path on each instance; this way, I can easily identify which instance
 I am connecting to when examining the parameters configuration with
 
 ```sql
@@ -77,7 +77,7 @@ mvn compile exec:java -Dexec.mainClass=HAReads
 
 ## Nodejs
 
-NodeJs does not support natively multiple hots on the connection string. What we are doing here is storing all the hosts
+NodeJs does not support natively multiple hosts on the connection string. What we are doing here is storing all the hosts
 in an array, and test each one in a sequence until successful. The rest of the process is identical to what we are doing
 in the other languages.
 
@@ -97,11 +97,125 @@ dotnet run
 
 ```sh
 go mod tidy
-do run .
+go run .
 ```
 
 ## Rust
 
 ```sh
 cargo run
+```
+
+## C++
+
+The build process differs depending on your platform: **Linux**, **macOS**, or **Windows**.
+
+### Linux
+
+Use `apt` (or your distro’s equivalent) to install dependencies:
+
+```sh
+sudo apt update
+sudo apt install -y g++ cmake pkg-config libpqxx-dev
+```
+
+Now build with:
+
+```sh
+mkdir -p build && cd build
+
+cmake ..
+make
+```
+
+Execute the demo with:
+
+```sh
+./HAReads
+```
+
+You can clean up with:
+
+```sh
+cd build
+make clean
+```
+
+### macOS
+
+Use Homebrew to install `libpqxx`. This also pulls in the required `libpq`:
+
+```sh
+brew install libpqxx
+```
+
+Now build with:
+```sh
+git clone https://github.com/YOUR_REPO/questdb-ha-reads
+cd questdb-ha-reads/cpp
+mkdir -p build && cd build
+
+cmake .. \
+  -DCMAKE_PREFIX_PATH=/opt/homebrew/opt/libpqxx \
+  -DCMAKE_LIBRARY_PATH=/opt/homebrew/lib \
+  -DCMAKE_INCLUDE_PATH=/opt/homebrew/include
+
+make
+```
+
+Execute the demo with:
+
+```sh
+./HAReads
+```
+
+You can clean up with:
+
+```sh
+cd build
+make clean
+```
+
+### Windows
+
+You can use WSL for compatibility or MSYS2
+
+#### WSL
+
+Install WSL + Ubuntu:
+
+```sh
+wsl --install
+```
+
+Inside WSL terminal, you can now follow the same process we described above for Linux
+
+#### MSYS2
+
+Open MSYS2 MinGW 64-bit shell and run:
+
+```sh
+pacman -Syuu
+pacman -S --needed mingw-w64-x86_64-toolchain cmake git pkgconf mingw-w64-x86_64-libpqxx
+```
+
+Now build with:
+```sh
+mkdir -p build && cd build
+
+cmake -G "MinGW Makefiles" ..
+mingw32-make
+```
+
+Execute the demo with:
+
+```sh
+./HAReads.exe
+```
+
+You can clean up with:
+
+```sh
+cd build
+mingw32-make clean
 ```
