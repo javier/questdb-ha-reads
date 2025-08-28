@@ -93,3 +93,11 @@ dotnet restore
 dotnet run
 ```
 
+## Go
+
+```sh
+go mod tidy
+do run .
+```
+
+## Rust
