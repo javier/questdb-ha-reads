@@ -101,3 +101,7 @@ do run .
 ```
 
 ## Rust
+
+```sh
+cargo run
+```

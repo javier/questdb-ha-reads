@@ -1,0 +1,9 @@
+[package]
+name = "ha-reads"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time"] }
+tokio-postgres = "0.7"
+anyhow = "1"
