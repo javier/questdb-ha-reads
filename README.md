@@ -82,11 +82,14 @@ The demo is packed as a maven project. You can either execute from your IDE, or 
 mvn compile exec:java -Dexec.mainClass=HAReads
 ```
 
-## Nodejs
+## Node.js
 
-NodeJs does not support natively multiple hosts on the connection string. What we are doing here is storing all the hosts
-in an array, and test each one in a sequence until successful. The rest of the process is identical to what we are doing
-in the other languages.
+Node.js supports libpq-style multi-host connection strings only when using `pg-native`. The default `pg` client (pure JS)
+does not support it. If you want cross-platform compatibility or don’t want to rely on native bindings, you need to
+implement the failover logic manually.
+
+What we are doing here is storing all the hosts in an array, and test each one in a sequence until successful. The rest of
+ the process is identical to what we are doing in the other languages.
 
 ```sh
 npm install
