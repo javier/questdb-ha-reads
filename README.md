@@ -1,7 +1,7 @@
 # QuestDB Highly Available Reads
 
-This is an example repository companion to the blog post XXX, showing how you can get HA reads when using multiple QuestDB
-instances.
+This is an example repository companion to the blog post [Highly Available Reads with QuestDB](https://questdb.com/blog/highly-available-reads-with-questdb), 
+showing how you can get HA reads when using multiple QuestDB instances.
 
 The goal of this example is to demonstrate how you can point your client application to multiple QuestDB replicated
 instances, and get automatic failover of any query to the next available instance, so your queries are always served
