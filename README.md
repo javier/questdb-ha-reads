@@ -3,6 +3,13 @@
 This is an example repository companion to the blog post XXX, showing how you can get HA reads when using multiple QuestDB
 instances.
 
+The goal of this example is to demonstrate how you can point your client application to multiple QuestDB replicated
+instances, and get automatic failover of any query to the next available instance, so your queries are always served
+from an instance in your cluster even in
+the event of a server going down (accidentally or for scheduled maintenance).
+
+![Highly Available Reads in Action](./ha_reads_demo.gif)
+
 Replication is out of the box when using QuestDB Enterprise. For QuestDB Open Source, replication can be achieved by
 double sending all the DDL and DML commands to several instances, but in that case consistency is not guaranteed.
 
