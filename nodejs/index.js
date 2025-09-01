@@ -5,7 +5,7 @@ const USER = "admin";
 const PASS = "quest";
 const DB = "qdb";
 
-const QUERY = "select value from (show parameters) where property_path = 'cairo.wal.temp.pending.rename.table.prefix'";
+const QUERY = "select value from (show parameters) where property_path IN ( 'replication.role', 'cairo.wal.temp.pending.rename.table.prefix') limit 1";
 
 let client = null;
 let hostIndex = 0;

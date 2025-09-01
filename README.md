@@ -1,6 +1,6 @@
 # QuestDB Highly Available Reads
 
-This is an example repository companion to the blog post [Highly Available Reads with QuestDB](https://questdb.com/blog/highly-available-reads-with-questdb), 
+This is an example repository companion to the blog post [Highly Available Reads with QuestDB](https://questdb.com/blog/highly-available-reads-with-questdb),
 showing how you can get HA reads when using multiple QuestDB instances.
 
 The goal of this example is to demonstrate how you can point your client application to multiple QuestDB replicated
@@ -10,13 +10,19 @@ the event of a server going down (accidentally or for scheduled maintenance).
 
 ![Highly Available Reads in Action](./ha_reads_demo.gif)
 
-Replication is out of the box when using QuestDB Enterprise. For QuestDB Open Source, replication can be achieved by
-double sending all the DDL and DML commands to several instances, but in that case consistency is not guaranteed.
+Replication is out of the box when using QuestDB Enterprise. Implementing replication by adding a custom layer on top
+of QuestDB Open Source is discouraged, as consistency and data recovery is not guaranteed.
 
-For the purpose of this demo, and to simplify the setup, you will be just starting three QuestDB instances on a single
-host using Docker.
+## Starting the demo environment
 
-## Start several QuestDB containers using Docker
+We recommend using a QuestDB cluster with at least one read-replica, so you can verify the client applications failover
+on consistent data.
+
+If you don't have access to QuestDB Enterprise, or if you prefer to test in a local environment, for the purpose of this
+demo you can start three independent, not replicated, QuestDB instances on a single host using Docker. Note this will
+not replicate any data, as instances are unaware of each other.
+
+### Start several QuestDB containers using Docker
 
 ```sh
 docker run --name primary -d --rm -e QDB_CAIRO_WAL_TEMP_PENDING_RENAME_TABLE_PREFIX=temp_primary  -p 9000:9000  -p 8812:8812 questdb/questdb
@@ -28,15 +34,23 @@ docker run --name replica2 -d --rm -e QDB_CAIRO_WAL_TEMP_PENDING_RENAME_TABLE_PR
 
 So you have now three instances running, each listening on different HTTP port (9000, 9001, and 9002) and postgresql port (8812, 8813, 8814).
 I passed an environment variable to set a different temporary path on each instance; this way, I can easily identify which instance
-I am connecting to when examining the parameters configuration with
+I am connecting to when examining the parameters. On Enterprise, we can just check the `replication.role` parameter.
 
 ```sql
-select value from (show parameters) where property_path = 'cairo.wal.temp.pending.rename.table.prefix';
+select value from (show parameters) where property_path IN ( 'replication.role', 'cairo.wal.temp.pending.rename.table.prefix') limit 1;
 ```
 
-The property values for my three containers will be `temp_primary`, `temp_replica1`, and `temp_replica2`.
+In the case of running QuestDB Enterprise, the output for the command will be either `primary` or `replica`. In the case
+of running the local docker setup, the output will be `temp_primary`, `temp_replica1`, and `temp_replica2`.
 
-Now that the three containers are running, if you start any of the demos provided they should all show the output
+### Running the demo
+
+
+Now that the three containers are running, if you start any of the demos provided they should all show the output. Note
+that of you are running QuestDB Enterprise, and you don't want to change the config variable to
+
+replication.role
+
 ```
 temp_primary
 temp_primary

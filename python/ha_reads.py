@@ -57,7 +57,7 @@ if __name__ == "__main__":
     demo = HAReads()
     query = (
         "select value from (show parameters) "
-        "where property_path = 'cairo.wal.temp.pending.rename.table.prefix';"
+        "where property_path IN ( 'replication.role', 'cairo.wal.temp.pending.rename.table.prefix') limit 1;"
     )
 
     for i in range(1, 251):  # 250 iterations

@@ -9,7 +9,7 @@ import (
 )
 
 const dsn = "postgres://admin:quest@localhost:8812,localhost:8813,localhost:8814/qdb?target_session_attrs=any&connect_timeout=3"
-const query = "select value from (show parameters) where property_path = 'cairo.wal.temp.pending.rename.table.prefix'"
+const query = "select value from (show parameters) where property_path IN ( 'replication.role', 'cairo.wal.temp.pending.rename.table.prefix') limit 1"
 
 func connectWithRetry(ctx context.Context) *pgx.Conn {
 	for {

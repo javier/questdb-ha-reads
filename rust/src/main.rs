@@ -2,7 +2,7 @@ use anyhow::Result;
 use tokio::time::{sleep, Duration};
 use tokio_postgres::{Config, NoTls};
 
-const QUERY: &str = "select value from (show parameters) where property_path = 'cairo.wal.temp.pending.rename.table.prefix'";
+const QUERY: &str = "select value from (show parameters) where property_path IN ( 'replication.role', 'cairo.wal.temp.pending.rename.table.prefix') limit 1";
 
 async fn connect_with_retry() -> (tokio_postgres::Client, tokio_postgres::Connection<tokio_postgres::Socket, tokio_postgres::tls::NoTlsStream>) {
     loop {

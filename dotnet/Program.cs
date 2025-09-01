@@ -14,7 +14,8 @@ class HAReads
 
     const string Query =
         "select value from (show parameters) " +
-        "where property_path = 'cairo.wal.temp.pending.rename.table.prefix'";
+        "where property_path IN ( 'replication.role', 'cairo.wal.temp.pending.rename.table.prefix') limit 1";
+
 
     static NpgsqlConnection? conn;
 

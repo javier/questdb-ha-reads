@@ -70,7 +70,7 @@ public class HAReads {
     public static void main(String[] args) throws Exception {
         HAReads demo = new HAReads();
         String query = "select value from (show parameters) "
-                     + "where property_path = 'cairo.wal.temp.pending.rename.table.prefix';";
+                     + "where property_path IN ( 'replication.role', 'cairo.wal.temp.pending.rename.table.prefix') limit 1;";
 
         for (int i = 1; i <= 250; i++) {
             String value = demo.runQuery(query);
